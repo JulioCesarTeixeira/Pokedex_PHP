@@ -14,6 +14,10 @@
 <body>
 
 <?php
+ini_set('display_errors', 0);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 
 if (isset($_GET['run'])) {
 //api call
@@ -79,7 +83,7 @@ if (isset($_GET['run'])) {
                             echo "<p>" . $v['move']['name'] . "</p>";
                         }
 
-                        //old fashioned working loop
+                        //first version working loop
                         //                        for ($i = 0; $i < $MAX_MOVES; $i++)
                         //                            if(count($pokemon->moves) < 2) { //ditto fix of one move
                         //                                echo "<p>" . $pokemon->moves[0]->move->name . "</p>";
