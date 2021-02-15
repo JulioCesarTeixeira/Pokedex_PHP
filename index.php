@@ -14,12 +14,24 @@
 <body>
 
 <?php
-$linkAPI = "https://pokeapi.co/api/v2/pokemon/";
-$id = $_GET["pokemon-id"];
-$jsonData = file_get_contents($linkAPI . $id . '/');
-$pokemon = json_decode($jsonData);
-$pokemonMov = json_decode($jsonData, true);
-$MAX_MOVES = 4;
+
+if (isset($_GET['run'])) {
+//api call
+    function findPokemon(string $id): array
+    {
+        return json_decode(file_get_contents("https://pokeapi.co/api/v2/pokemon/" . $id), true, 512, JSON_THROW_ON_ERROR);
+    }
+
+//ID, name, img, moves
+    $id = $_GET["pokemon-id"];
+    $pokemon = findPokemon($id);
+    $name = $pokemon['name'];
+    $pokeImg = $pokemon['sprites']['front_default'];
+    $backImg = $pokemon['sprites']['back_default'];
+    $moves = $pokemon['moves'];
+
+    require 'evolutions.php';
+}
 ?>
 
 
@@ -30,7 +42,7 @@ $MAX_MOVES = 4;
             <form action="index.php" method="get">
                 <label for="pokemon-id"></label>
                 <input type="text" name="pokemon-id" id="pokemon-id" placeholder="Pokemon ID or Name"/>
-                <input type="submit">
+                <input class="button" type="submit" name="run">
             </form>
 
         </div>
@@ -42,18 +54,18 @@ $MAX_MOVES = 4;
                     <h4 class="title">
                         <em class="ID-number">
                             <?php
-                            echo $pokemon->id;
+                            echo $id;
                             ?>
                         </em>
                         <strong class="name">
                             <?php
-                            echo $pokemon->name;
+                            echo " - " . $name;
                             ?>
                         </strong>
                     </h4>
                     <img id="img-pokemon" src="
                     <?php
-                    echo $pokemon->sprites->front_default;
+                    echo $pokeImg;
                     ?>
                             " alt="pokemon">
                 </li>
@@ -62,42 +74,29 @@ $MAX_MOVES = 4;
                     <div id="get-moves">
                         <?php
                         //4 random moves will be evoked; shorter loop version that accommodates any pokemon
-                        shuffle($pokemon->moves);
-                        foreach(array_slice($pokemon->moves, 0, 4) AS $k => $v){
-                            echo "<p>" . $v->move->name . "</p>";
+                        shuffle($moves);
+                        foreach (array_slice($moves, 0, 4) as $k => $v) {
+                            echo "<p>" . $v['move']['name'] . "</p>";
                         }
 
                         //old fashioned working loop
-//                        for ($i = 0; $i < $MAX_MOVES; $i++)
-//                            if(count($pokemon->moves) < 2) { //ditto fix of one move
-//                                echo "<p>" . $pokemon->moves[0]->move->name . "</p>";
-//                                return;
-//                            } else if (count($pokemon->moves) > 1){
-//                                echo "<p>" . $pokemon->moves[$i]->move->name . "</p>";
-//                            }
+                        //                        for ($i = 0; $i < $MAX_MOVES; $i++)
+                        //                            if(count($pokemon->moves) < 2) { //ditto fix of one move
+                        //                                echo "<p>" . $pokemon->moves[0]->move->name . "</p>";
+                        //                                return;
+                        //                            } else if (count($pokemon->moves) > 1){
+                        //                                echo "<p>" . $pokemon->moves[$i]->move->name . "</p>";
+                        //                            }
                         ?>
                     </div>
                 </li>
-                <?php include 'evolutions.php';?>
                 <div class="right-container">
-                    <li id="all-evolutions" class="hidden">
+                    <li id="all-evolutions">
                         <h4>Evolutions</h4>
-                        <div id="evolution-images" class="hidden">
-                            <div id="evolution0">
-                                <img src="" alt="evolution">
-                            </div>
-                            <div id="evolution1">
-                                <img src="" alt="evolution">
-                            </div>
-                            <div id="evolution2">
-                                <img src="" alt="evolution">
-                            </div>
-                            <div id="evolution3">
-                                <img src="" alt="evolution">
-                            </div>
-                        </div>
-                        <div class="hidden" id="extra-evolutions">
-                        </div>
+                        <div id="evolution-images">
+                            <?php
+                            findEvolution($pokemon);
+                            ?>
                     </li>
                 </div>
             </div>
