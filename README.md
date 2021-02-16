@@ -2,7 +2,7 @@
 ***
 For this exercise we have been challenged to adapt our [Pokedex project](https://github.com/JulioCesarTeixeira/Pokedex_API), which we did in Javascript, to PHP.
 
-##Learning Objectives
+## Learning Objectives
 ***
 -Starting with PHP
 * To be able to write a simple condition and a simple loop
@@ -10,7 +10,7 @@ For this exercise we have been challenged to adapt our [Pokedex project](https:/
 * To know where to search for PHP documentation
 * To find out how much easier it is to learn a second programming language
 
-##Goals
+## Goals
 ***
 Make a Pokédex using the PokeAPI.
 
